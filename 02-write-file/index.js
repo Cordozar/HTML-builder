@@ -15,14 +15,24 @@ const rl = readline.createInterface({
 function getTextInput() {
   rl.question('> ', (inputText) => {
     if (inputText.toLowerCase() === 'exit') {
-      console.log('Goodbye!');
       rl.close();
       writeStream.close();
+      process.exit();
     } else {
       writeStream.write(inputText);
       getTextInput();
     }
   });
 }
+
+process.on('SIGINT', () => {
+  writeStream.end();
+  rl.close();
+  process.exit();
+});
+
+process.on('exit', () => {
+  console.log('Goodbye!');
+});
 
 getTextInput();
