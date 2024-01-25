@@ -14,11 +14,18 @@ async function readFolderContents(folderPath) {
   const filteredFolders = files.filter((file) => file.isFile() === true);
   filteredFolders.forEach((file) => {
     fs.stat(`${file.path}\\${file.name}`, (err, stats) => {
-      console.log(
-        `${file.name.substring(0, file.name.indexOf('.'))} - ${path
+      let result;
+      if (file.name.startsWith('.')) {
+        result = `${file.name} - ${path.extname(file.name).slice(1)} - ${
+          stats.size / 1000
+        }kb`;
+      } else {
+        result = `${file.name.substring(0, file.name.lastIndexOf('.'))} - ${path
           .extname(file.name)
-          .slice(1)} - ${stats.size / 1000}kb`,
-      );
+          .slice(1)} - ${stats.size / 1000}kb`;
+      }
+
+      console.log(result);
     });
   });
 }
